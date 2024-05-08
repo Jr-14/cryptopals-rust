@@ -1,5 +1,5 @@
 pub fn hex_to_base64(hex_string: &str) -> String {
-    let base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789/+";
+    let base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     hex_string
         .as_bytes()
         .iter()
@@ -102,6 +102,6 @@ mod tests {
     fn test_hex_to_base64_2() {
         let hex_string = "ffff";
         let base64_string = hex_to_base64(hex_string);
-        assert_eq!(base64_string, "++8==");
+        assert_eq!(base64_string, "//8==");
     }
 }
