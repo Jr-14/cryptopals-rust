@@ -4,21 +4,20 @@ use super::challenge2;
 pub fn single_byte_xor_cipher(encoded_string: &str) -> String {
     let encoded_bits = hex_string_to_bytes(encoded_string);
     let mut vec_result: Vec<String> = Vec::new();
+
     for c in b'a'..=b'z' {
         let output: Vec<u8> = encoded_bits.iter().map(|b| b ^ c).collect();
         println!("{:?}", output);
         let output = std::str::from_utf8(&output).unwrap().to_string();
-        // let output = match std::str::from_utf8(&output) {
-        //     Ok(val) => val.to_string(),
-        //     Err(_) => panic!("Oh nooo bad code!"),
-        // };
         vec_result.push(output);
         // println!("{:8b}", bits);
-        println!("{:?}", c);
+        // println!("{:?}", c);
     }
-    for res in vec_result.iter() {
-        println!("{res}");
-    }
+
+    // for res in vec_result.iter() {
+    //     println!("{:?}", res);
+    // }
+
     let mut max_score = 0;
     let mut sentence = String::from("");
 
@@ -30,13 +29,8 @@ pub fn single_byte_xor_cipher(encoded_string: &str) -> String {
         }
     }
 
-    println!("max score is {max_score} with sentence: {:?}", sentence);
+    println!("max score is {max_score} with sentence: {sentence}");
     sentence
-    // challenge1::hex_value(c);
-    // let s: str = "asdf";
-    // let rs: &str = &s;
-    // let ss: String = String::from("asdf");
-    // let sss: String = "asdf".to_string();
 }
 
 fn hex_string_to_bytes(s: &str) -> Vec<u8> {
@@ -84,20 +78,11 @@ fn score_byte_char(c: u8) -> i32 {
 
 fn score_string(s: &str) -> i32 {
     s.chars().into_iter().fold(0, |sum, val| sum + score_byte_char(val as u8))
-    // s.chars().into_iter().fold(0, |sum, val| sum + score_byte_char(val as u8)) / s.len() as i32
 } 
 
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    #[ignore]
-    fn test_single_byte_xor() {
-        let s = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
-        let result = single_byte_xor_cipher(s);
-        println!("{result}");
-    }
 
     #[test]
     fn test_score_byte_char() {
@@ -133,13 +118,8 @@ mod test {
     }
 
     #[test]
-    fn test_print_len() {
-        let s = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
-        println!("{:?}", s.len());
-    }
-
-    #[test]
     fn test_single_byte_xor_cipher() {
-        single_byte_xor_cipher("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
+        let plain_text = single_byte_xor_cipher("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
+        assert_eq!(plain_text, "cOOKING\0mc\u{7}S\0LIKE\0A\0POUND\0OF\0BACON");
     }
 }
