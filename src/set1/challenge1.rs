@@ -3,10 +3,7 @@ pub fn hex_to_base64(hex_string: &str) -> String {
     hex_string
         .as_bytes()
         .iter()
-        .map(|byte| match hex_value(byte) {
-            Ok(val) => val,
-            _ => panic!("Invalid hex character"),
-        })
+        .map(|byte| hex_value(byte).expect("Invalid hex character"))
         .collect::<Vec<u8>>()
         .chunks(3)
         .fold(String::from(""), |mut acc, chunk| {
@@ -36,8 +33,12 @@ pub fn hex_to_base64(hex_string: &str) -> String {
                     .expect("No base64 char found");
                 acc.push(first_char);
                 acc.push(second_char);
-                let padding_amount = acc.len() % 4;
-                for _ in 0..=padding_amount {
+                let padding_amount = if acc.len() % 4 == 0 {
+                    0
+                } else {
+                    4 - (acc.len() % 4)
+                };
+                for _ in 0..padding_amount {
                     acc.push('=');
                 }
             } else {
@@ -47,8 +48,12 @@ pub fn hex_to_base64(hex_string: &str) -> String {
                     .nth(first_index) 
                     .expect("No base64 char found");
                 acc.push(first_char);
-                let padding_amount = acc.len() % 4;
-                for _ in 0..=padding_amount {
+                let padding_amount = if acc.len() % 4 == 0 {
+                    0
+                } else {
+                    4 - (acc.len() % 4)
+                };
+                for _ in 0..padding_amount {
                     acc.push('=');
                 }
             }
@@ -73,7 +78,7 @@ mod tests {
     #[test]
     fn test_hex_value_lowercase() {
         let hex_chars = "0123456789abcdef";
-        let vals = Vec::from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        let vals: Vec<u8> = (0..=15).collect();
         let hex_vals: Vec<u8> = hex_chars
             .as_bytes()
             .iter()
@@ -85,7 +90,7 @@ mod tests {
     #[test]
     fn test_hex_value_uppercase() {
         let hex_chars = "0123456789ABCDEF";
-        let vals = Vec::from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        let vals: Vec<u8> = (0..=15).collect();
         let hex_vals: Vec<u8> = hex_chars
             .as_bytes()
             .iter()
@@ -102,14 +107,21 @@ mod tests {
             base64_string,
             "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
         );
-
+        
         let hex_string = "ffff";
         let base64_string = hex_to_base64(hex_string);
-        assert_eq!(base64_string, "//8=="); // Incorrect output
-        // assert_eq!(base64_string, "//8="); // Correct output
-
+        assert_eq!(base64_string, "//8="); // Correct output
+        
         let hex_string = "4927";
         let base64_string = hex_to_base64(hex_string);
         assert_eq!(base64_string, "SSc="); // Correct output
+
+        let hex_string = "49276d206b696";
+        let base64_string = hex_to_base64(hex_string);
+        assert_eq!(base64_string, "SSdtIGtpY==="); // Correct output
+
+        let hex_string = "fafa";
+        let base64_string = hex_to_base64(hex_string);
+        assert_eq!(base64_string, "+vo="); // Correct output
     }
 }
