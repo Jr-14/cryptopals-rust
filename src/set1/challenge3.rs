@@ -1,5 +1,4 @@
 use super::challenge1;
-use super::challenge2;
 
 pub fn single_byte_xor_cipher(encoded_string: &str) -> String {
     let encoded_bits = hex_string_to_bytes(encoded_string);
