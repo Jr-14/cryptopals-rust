@@ -103,18 +103,18 @@ mod tests {
         
         let hex_string = "ffff";
         let base64_string = hex_to_base64(hex_string);
-        assert_eq!(base64_string, "//8="); // Correct output
+        assert_eq!(base64_string, "//8=");
         
         let hex_string = "4927";
         let base64_string = hex_to_base64(hex_string);
-        assert_eq!(base64_string, "SSc="); // Correct output
+        assert_eq!(base64_string, "SSc=");
 
         let hex_string = "49276d206b696";
         let base64_string = hex_to_base64(hex_string);
-        assert_eq!(base64_string, "SSdtIGtpY==="); // Correct output
+        assert_eq!(base64_string, "SSdtIGtpY===");
 
         let hex_string = "fafa";
         let base64_string = hex_to_base64(hex_string);
-        assert_eq!(base64_string, "+vo="); // Correct output
+        assert_eq!(base64_string, "+vo=");
     }
 }
