@@ -1,6 +1,6 @@
 pub fn hex_to_base64(hex_string: &str) -> String {
     let base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    hex_string
+    let mut base64_str = hex_string
         .as_bytes()
         .iter()
         .map(|byte| hex_value(byte).expect("Invalid hex character"))
@@ -33,14 +33,6 @@ pub fn hex_to_base64(hex_string: &str) -> String {
                     .expect("No base64 char found");
                 acc.push(first_char);
                 acc.push(second_char);
-                let padding_amount = if acc.len() % 4 == 0 {
-                    0
-                } else {
-                    4 - (acc.len() % 4)
-                };
-                for _ in 0..padding_amount {
-                    acc.push('=');
-                }
             } else {
                 let first_index: usize = (chunk[0] << 2).into();
                 let first_char = base64_chars
@@ -48,17 +40,18 @@ pub fn hex_to_base64(hex_string: &str) -> String {
                     .nth(first_index) 
                     .expect("No base64 char found");
                 acc.push(first_char);
-                let padding_amount = if acc.len() % 4 == 0 {
-                    0
-                } else {
-                    4 - (acc.len() % 4)
-                };
-                for _ in 0..padding_amount {
-                    acc.push('=');
-                }
             }
             acc
-        })
+        });
+    let padding_amount = if base64_str.len() % 4 == 0 {
+        0
+    } else {
+        4 - (base64_str.len() % 4)
+    };
+    for _ in 0..padding_amount {
+        base64_str.push('=');
+    }
+    base64_str
 }
 
 /// Calculate the corresponding hex character into a number
