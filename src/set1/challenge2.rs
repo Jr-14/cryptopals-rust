@@ -2,7 +2,6 @@ use super::challenge1;
 use std::iter::zip;
 
 pub fn fixed_xor(hex_string_one: &str, hex_string_two: &str) -> String {
-    let hex_strings = "0123456789abcdef";
     let string_one_bits: Vec<u8> = hex_string_one
         .as_bytes()
         .iter()
@@ -14,6 +13,7 @@ pub fn fixed_xor(hex_string_one: &str, hex_string_two: &str) -> String {
         .map(|byte| challenge1::hex_value(byte).unwrap())
         .collect();
 
+    let hex_strings = "0123456789abcdef";
     zip(string_one_bits, string_two_bits)
         .map(|(x, y)| hex_strings.chars().nth((x ^ y) as usize).unwrap())
         .fold(String::from(""), |acc, value| acc + &value.to_string())
